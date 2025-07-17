@@ -59,7 +59,7 @@ The reference genome was indexed using STAR with the following files:
 	•	Output was saved to genome_index/
 
 
-🎯 Read alignment with STARsolo
+##🎯 Read alignment with STARsolo
 
 Read alignment and quantification were performed using STARsolo in CB_UMI_Complex mode with the following parameters:
 	•	--soloType CB_UMI_Complex
@@ -76,7 +76,7 @@ This script loops through all FASTQ files and runs STARsolo using the indexed ge
 
 
 
-👤 Author
+##👤 Author
 
 Miquel Sendra
 Guignard Lab, IBDM (Marseille)
