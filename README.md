@@ -33,13 +33,63 @@ scParhyale/
 - **Read 2** contains the transcript sequence
 - Sequencing depth and layout as expected from Illumina NovaSeq 6000
 
+## Install tools
+1. Make project folders (optional but tidy)
+```bash
+mkdir -p ~/workspace/scRNAseq/tools
+cd ~/workspace/scRNAseq/tools
+
+```
+
+2. Download & compile STAR locally
+```bash
+wget https://github.com/alexdobin/STAR/archive/refs/tags/2.7.11a.tar.gz
+tar -xvzf 2.7.11a.tar.gz
+cd STAR-2.7.11a/source
+make STAR
+```
+
+This will create the STAR executable in:
+```bash
+~/workspace/scRNAseq/tools/STAR-2.7.11a/source/STAR
+
+```
+
+You can test it doing 
+```bash
+./STAR
+```
+
+3. Add it to your PATH (optional but useful)
+
+Edit your ~/.bashrc (or ~/.zshrc if using zsh):
+```bash
+nano ~/.zshrc
+```
+
+Add this line at the end:
+```bash
+export PATH="$HOME/workspace/scRNAseq/tools/STAR-2.7.11a/source:$PATH"
+```
+
+then reload:
+```bash
+source ~/.zshrc
+```
+
+4. Test
+```bash
+STAR --version
+```
 
 ## 🧬 Reference genome indexing
 
 The reference genome was indexed using STAR with the following files:
 
 - Genome FASTA: `genomeV5.fa`
-- Gene annotations: `Gene_Models_210210.gtf`
+- Gene annotations:
+  - Old `Gene_Models_210210.gtf`
+  - New (Matilde Paris) `Annotation_Reg_Embryo_500_cleanOverlap0.5_3_restranded_exp345.gtf`
 
 **Command used** (on a high-RAM workstation):
 
@@ -49,7 +99,7 @@ The reference genome was indexed using STAR with the following files:
   --runMode genomeGenerate \
   --genomeDir ~/workspace/scRNAseq/genome_index \
   --genomeFastaFiles ~/workspace/scRNAseq/genome/genomeV5.fa \
-  --sjdbGTFfile ~/workspace/scRNAseq/genome/Gene_Models_210210.gtf \
+  --sjdbGTFfile ~/workspace/scRNAseq/genome/Annotation_Reg_Embryo_500_cleanOverlap0.5_3_restranded_exp345.gtf \
   --sjdbOverhang 59 \
   --limitGenomeGenerateRAM 480000000000
 
@@ -74,7 +124,24 @@ To automate the alignment of all libraries (lib01 to lib06), we created a Bash s
 
 This script loops through all FASTQ files and runs STARsolo using the indexed genome and appropriate parameters.
 
+Remember to give permissions before running and making sure all paths are correctly specified
+```bash
+chmod +x ~/workspace/scRNAseq/code/run_STARsolo_all.sh
+```
 
+In our workstation it took about 40h to complete with the above specified resources. Run with nohup so that you can disconect from the worktation or close the terminal and it will continue.
+
+```bash
+nohup ~/workspace/scRNAseq/code/run_STARsolo_all.sh > ~/workspace/scRNAseq/code/run_log.txt 2>&1 &
+```
+
+You can later check the progress...
+
+```bash
+tail -f ~/workspace/scRNAseq/code/run_log.txt
+```
+
+It will say sth like... processing library 1
 
 ##👤 Author
 
